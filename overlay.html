@@ -23,7 +23,7 @@
 
       card.innerHTML = `
         <div class="label">${map}</div>
-        <img src="images/${map}.jpg" alt="${map}">
+        <img src="images/${map}.jpg" alt="\${map}">
         <div class="ban-label" id="${map}-ban"></div>
         <div class="pick-label" id="${map}-pick"></div>
         <div class="side-label" id="${map}-side"></div>
@@ -36,15 +36,22 @@
 
     socket.addEventListener("message", async (event) => {
       let rawData = event.data;
-
       if (rawData instanceof Blob) {
-        rawData = await rawData.text(); // Convert Blob to string
+        rawData = await rawData.text();
       }
 
       const data = JSON.parse(rawData);
-
+      //console.log(data.action);
+      if (data.action === "reset") {
+        location.reload()
+      }
       const mapCard = document.getElementById(`map-${data.map}`);
-      if (!mapCard) return;
+      //console.log(mapCard)
+      if (!mapCard) {
+        return;
+      }
+
+
 
       if (data.action === "ban") {
         mapCard.classList.add("banned");
@@ -62,9 +69,9 @@
       if (data.color) {
         mapCard.style.setProperty("--team-color", data.color);
       }
+
+
     });
-
-
   </script>
 </body>
 
