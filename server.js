@@ -4,9 +4,8 @@ const path = require("path");
 const WebSocket = require("ws");
 
 const server = http.createServer((req, res) => {
-  console.log("Request for: ${req.url}");
-  let filePath = "." + req.url;
-  if (filePath === "./") filePath = "./controller.html";
+ 
+  let filePath = path.join(__dirname, req.url === "/" ? "controller.html" : req.url);
 
   const extname = String(path.extname(filePath)).toLowerCase();
   const mimeTypes = {

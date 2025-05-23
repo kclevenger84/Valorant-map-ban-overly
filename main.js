@@ -3,8 +3,10 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 let mainWindow;
+let overlayWindow;
 
-function createWindow() {
+
+function createMainWindow() {
     mainWindow = new BrowserWindow({
         width: 500,
         height: 750,
@@ -21,7 +23,28 @@ function createWindow() {
     });
 }
 
+function createOverlayWindow() {
+    overlayWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        frame: false,
+        alwaysOnTop: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
+
+    overlayWindow.loadFile('overlay.html');
+
+    overlayWindow.on('closed', function () {
+        overlayWindow = null;
+    });
+}
+
+
 app.on('ready', () => {
+    const serverPath = path.join(__dirname, 'server.js');
     const server = spawn('node', ['server.js']);
 
     server.stdout.on('data', (data) => {
@@ -32,7 +55,8 @@ app.on('ready', () => {
         console.error(`stderr: ${data}`);
     });
 
-    createWindow();
+    createMainWindow();
+    createOverlayWindow();
 });
 
 app.on('window-all-closed', function () {
@@ -43,6 +67,6 @@ app.on('window-all-closed', function () {
 
 app.on('activate', function () {
     if (mainWindow === null) {
-        createWindow();
+        createMainWindow();
     }
 });
