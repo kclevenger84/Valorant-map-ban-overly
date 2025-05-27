@@ -32,16 +32,18 @@
       mapGrid.appendChild(card);
     });
 
-    const socket = new WebSocket("ws://localhost:3000");
-
+    const socket = new WebSocket("ws://localhost:3001");
+    console.log(socket)
     socket.addEventListener("message", async (event) => {
+      console.log(message)
       let rawData = event.data;
       if (rawData instanceof Blob) {
         rawData = await rawData.text();
       }
 
       const data = JSON.parse(rawData);
-      //console.log(data.action);
+      console.log("Received data:", data);
+      console.log(data.action);
       if (data.action === "reset") {
         location.reload()
       }

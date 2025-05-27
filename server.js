@@ -4,9 +4,13 @@ const path = require("path");
 const WebSocket = require("ws");
 
 const server = http.createServer((req, res) => {
-  console.log("Request for: ${req.url}");
+  console.log(`Request for: ${req.url}`);
   let filePath = "." + req.url;
   if (filePath === "./") filePath = "./controller.html";
+
+  if (filePath === "/overlay.html") {
+    filePath = "./overlay.html";
+  }
 
   const extname = String(path.extname(filePath)).toLowerCase();
   const mimeTypes = {
@@ -22,6 +26,7 @@ const server = http.createServer((req, res) => {
 
   fs.readFile(filePath, (error, content) => {
     if (error) {
+      console.error(error); // Log error for debugging
       res.writeHead(404);
       res.end("Not found");
     } else {
@@ -45,5 +50,5 @@ wss.on("connection", (ws) => {
 });
 
 server.listen(3000, () => {
-  console.log("Server started on http://localhost:3000");
+  console.log("Server started on http://localhost:3001");
 });

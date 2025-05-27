@@ -87,7 +87,12 @@
   <script>
     const maps = ["Ascent", "Bind", "Haven", "Icebox", "Lotus", "Split", "Sunset"];
     const remainingMaps = new Set(maps);
-    const socket = new WebSocket("ws://localhost:3000");
+    const socket = new WebSocket("ws://localhost:3001");
+
+    socket.addEventListener("open", () => {
+      console.log("WebSocket connection established");
+    });
+
 
     const mapSelect = document.getElementById("mapSelect");
     function updateDropdown() {
@@ -113,6 +118,7 @@
         updateDropdown();
       }
       socket.send(JSON.stringify({ action, map, team, color }));
+      console.log("Sending action:", { action, map, team, color });
     }
 
     function sendSide(map, side, teamKey) {

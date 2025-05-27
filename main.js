@@ -22,15 +22,7 @@ function createWindow() {
 }
 
 app.on('ready', () => {
-    const server = spawn('node', ['server.js']);
-
-    server.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-
-    server.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-    });
+    const server = spawn('node', ['server.js'], { stdio: 'inherit' });
 
     createWindow();
 });
